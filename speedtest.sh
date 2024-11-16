@@ -22,8 +22,8 @@ test_file_url="http://speedtest.ftp.otenet.gr/files/test10Mb.db"
 # 输出表头
 printf "%-30s %-20s %-20s %-20s %-20s\n" \
     "$(echo -e '\033[33m地区\033[0m')" \
-    "$(echo -e '\033[36m上传速度\033[0m')" \
-    "$(echo -e '\033[32m下载速度\033[0m')" \
+    "$(echo -e '\033[36m下载速度\033[0m')" \
+    "$(echo -e '\033[32m上传速度\033[0m')" \
     "$(echo -e '\033[38;5;214m延迟\033[0m')" \
     "$(echo -e '\033[31m抖动\033[0m')"
 echo "---------------------------------------------------------------------------------------------"
@@ -73,7 +73,7 @@ function test_dns() {
         upload_speed=$(format_speed "$(awk "BEGIN {print 11 / ($elapsed / 1000)}")") # 数据长度为 11 字节
     fi
 
-    # 输出测试结果
+    # 输出测试结果，交换上传下载列
     printf "%-30s %-20s %-20s %-20s %-20s\n" \
         "$(echo -e '\033[33m'"$region"'\033[0m')" \
         "$(echo -e '\033[36m'"$download_speed"'\033[0m')" \
@@ -86,3 +86,12 @@ function test_dns() {
 for region in "${!dns_servers[@]}"; do
     test_dns "$region" "${dns_servers[$region]}"
 done
+
+# 测试完成后
+echo "---------------------------------------------------------------------------------------------"
+test_time=$(date +"%Y-%m-%d %H:%M:%S")
+echo "测试时间: $test_time"
+
+# 显示系统时间
+system_time=$(date +"%Y-%m-%d %H:%M:%S")
+echo "系统时间: $system_time"
