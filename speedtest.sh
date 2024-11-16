@@ -19,22 +19,13 @@ declare -A dns_servers=(
 # 测试文件 URL（用于下载速度测试）
 test_file_url="http://speedtest.ftp.otenet.gr/files/test10Mb.db"
 
-# 获取终端宽度
-term_width=$(tput cols)
-
-# 设置列宽（动态自适应）
-col1_width=$((term_width / 3))  # 地区列宽
-col2_width=$((term_width / 4))  # 下载速度列宽
-col3_width=$((term_width / 4))  # 上传速度列宽
-col4_width=$((term_width / 4))  # 延迟列宽
-col5_width=$((term_width / 4))  # 抖动列宽
-
-# 输出表头（全居中对齐）
-echo -e "\033[33m$(printf "%*s" $(( (col1_width + ${#'地区'}) / 2 ))地区)\033[0m"
-echo -e "\033[36m$(printf "%*s" $(( (col2_width + ${#'下载速度'}) / 2 ))下载速度)\033[0m"
-echo -e "\033[32m$(printf "%*s" $(( (col3_width + ${#'上传速度'}) / 2 ))上传速度)\033[0m"
-echo -e "\033[38;5;214m$(printf "%*s" $(( (col4_width + ${#'延迟'}) / 2 ))延迟)\033[0m"
-echo -e "\033[31m$(printf "%*s" $(( (col5_width + ${#'抖动'}) / 2 ))抖动)\033[0m"
+# 输出表头
+printf "%-40s %-20s %-20s %-20s %-20s\n" \
+    "$(echo -e '\033[33m地区\033[0m')" \
+    "$(echo -e '\033[36m下载速度\033[0m')" \
+    "$(echo -e '\033[32m上传速度\033[0m')" \
+    "$(echo -e '\033[38;5;214m延迟\033[0m')" \
+    "$(echo -e '\033[31m抖动\033[0m')"
 echo "---------------------------------------------------------------------------------------------"
 
 # 格式化速度为 KB/s 或 MB/s
@@ -82,12 +73,13 @@ function test_dns() {
         upload_speed=$(format_speed "$(awk "BEGIN {print 11 / ($elapsed / 1000)}")") # 数据长度为 11 字节
     fi
 
-    # 输出每一行数据，居中对齐
-    printf "%*s%-*s%*s%-*s%*s%-*s\n" $(( (col1_width + ${#region}) / 2 )) "" "$col1_width" "$region" \
-        $(( (col2_width + ${#download_speed}) / 2 )) "" "$col2_width" "$download_speed" \
-        $(( (col3_width + ${#upload_speed}) / 2 )) "" "$col3_width" "$upload_speed" \
-        $(( (col4_width + ${#latency}) / 2 )) "" "$col4_width" "$latency" \
-        $(( (col5_width + ${#jitter}) / 2 )) "" "$col5_width" "$jitter"
+    # 输出测试结果，居中对齐
+    printf "%-40s %-20s %-20s %-20s %-20s\n" \
+        "$(echo -e '\033[33m'"$region"'\033[0m')" \
+        "$(echo -e '\033[36m'"$download_speed"'\033[0m')" \
+        "$(echo -e '\033[32m'"$upload_speed"'\033[0m')" \
+        "$(echo -e '\033[38;5;214m'"$latency"'\033[0m')" \
+        "$(echo -e '\033[31m'"$jitter"'\033[0m')"
 }
 
 # 循环测试每个 DNS
@@ -95,11 +87,9 @@ for region in "${!dns_servers[@]}"; do
     test_dns "$region" "${dns_servers[$region]}"
 done
 
-# 测试完成后
-test_time=$(date +"%Y-%m-%d %H:%M:%S")
+# 分割线
 echo "---------------------------------------------------------------------------------------------"
-echo "测试时间: $test_time"
 
-# 显示系统时间
-system_time=$(date +"%Y-%m-%d %H:%M:%S")
-echo "系统时间: $system_time"
+# 测试时间和系统时间
+echo "测试时间: $(date "+%Y-%m-%d %H:%M:%S")"
+echo "系统时间: $(date)"
