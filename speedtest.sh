@@ -47,7 +47,7 @@ function test_dns() {
     ping_result=$(ping -c 4 "$dns" 2>/dev/null)
     if [[ $? -ne 0 ]]; then
         latency="失败"
-        jitter="N/A"
+        jitter="失败"
     else
         latency=$(echo "$ping_result" | awk -F'/' 'END {print $5 " ms"}')
         jitter=$(echo "$ping_result" | awk -F'/' 'END {print $6 " ms"}')
@@ -73,7 +73,7 @@ function test_dns() {
         upload_speed=$(format_speed "$(awk "BEGIN {print 11 / ($elapsed / 1000)}")") # 数据长度为 11 字节
     fi
 
-    # 输出测试结果，交换上传下载列
+    # 输出测试结果，交换上传下载列并对齐
     printf "%-30s %-20s %-20s %-20s %-20s\n" \
         "$(echo -e '\033[33m'"$region"'\033[0m')" \
         "$(echo -e '\033[36m'"$download_speed"'\033[0m')" \
