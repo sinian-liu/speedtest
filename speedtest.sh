@@ -20,7 +20,7 @@ declare -A dns_servers=(
 test_file_url="http://speedtest.ftp.otenet.gr/files/test10Mb.db"
 
 # 输出表头（确保对齐）
-printf "%-40s %-25s %-25s %-25s %-25s\n" \
+printf "%-40s %-20s %-20s %-20s %-20s\n" \
     "$(echo -e '\033[33m地区\033[0m')" \
     "$(echo -e '\033[36m下载速度\033[0m')" \
     "$(echo -e '\033[32m上传速度\033[0m')" \
@@ -74,7 +74,7 @@ function test_dns() {
     fi
 
     # 输出测试结果，交换上传下载列并对齐
-    printf "%-40s %-25s %-25s %-25s %-25s\n" \
+    printf "%-40s %-20s %-20s %-20s %-20s\n" \
         "$(echo -e '\033[33m'"$region"'\033[0m')" \
         "$(echo -e '\033[36m'"$download_speed"'\033[0m')" \
         "$(echo -e '\033[32m'"$upload_speed"'\033[0m')" \
